@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'cloudinary',
     'products',
     'users',
+    'rest_framework',
 ]
 
 AUTH_USER_MODEL = 'users.CustomUser'
