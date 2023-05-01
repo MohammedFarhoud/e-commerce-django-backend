@@ -5,12 +5,12 @@ from .models import Category,Product
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model=Category
-        fields=['id', 'name']
+        fields='__all__'
         
 class ProductSerializer(serializers.ModelSerializer):
-    category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
+    category = CategorySerializer(read_only=True)
 
     
     class Meta:
         model=Product
-        fields = ['id', 'name', 'description', 'image', 'price', 'quantity', 'category']
+        fields = '__all__'
