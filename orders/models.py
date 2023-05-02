@@ -16,7 +16,7 @@ class Order(models.Model):
     status = models.CharField(max_length=9, choices=STATUS_CHOICES)
     
     def __str__(self):
-        return self.user.username
+        return f"{self.user.username} - #{self.pk}"
     
 class OrderProduct(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
@@ -26,3 +26,4 @@ class OrderProduct(models.Model):
 
     def __str__(self):
         return self.product.name
+    

@@ -7,5 +7,5 @@ class Cart(models.Model):
     product = models.ManyToManyField(Product, related_name='carts')
     
     def __str__(self):
-        return self.user.username
+        return f"{self.user.username} - #{self.pk}"
     
