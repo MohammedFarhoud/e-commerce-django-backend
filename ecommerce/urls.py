@@ -16,5 +16,4 @@ urlpatterns = [
     path('category/<int:category_id>/products', ProductListByCategory.as_view(), name='product_list_by_category'),
     path('productserach/', ProductList.as_view(), name='product_list'),
 
-
 ]
