@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from cloudinary.models import CloudinaryField
 from django.core.validators import MinLengthValidator, RegexValidator
+import os
 
 def validate_image_size(image):
     if image.size > 2 * 1024 * 1024:
@@ -38,7 +39,7 @@ class Address(models.Model):
     district = models.CharField(max_length=50, validators=[MinLengthValidator(3)])
     street = models.CharField(max_length=100, validators=[MinLengthValidator(3)])
     building_number = models.CharField(max_length=10, validators=[MinLengthValidator(3)])
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='addresses')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='addresses', blank=True, null=True)
 
     def __str__(self):
         return f"{self.street}, {self.district}, {self.city}, {self.country}"

@@ -5,14 +5,14 @@ from users.models import CustomUser, Address
 class AddressSerializer(serializers.ModelSerializer):
     
     class Meta:
-        model = Address,
+        model = Address
         fields = '__all__'
     
 class UserSerializer(serializers.ModelSerializer):
-    addresses = AddressSerializer(many=True)
+    addresses = AddressSerializer(many=True, required=False)
 
     class Meta:
-        model = CustomUser,
+        model = CustomUser
         fields = '__all__'
         extra_kwargs = {
             'password': {'write_only': True},
@@ -20,7 +20,10 @@ class UserSerializer(serializers.ModelSerializer):
         }
     
     def create(self, validated_data):
-        return CustomUser.objects.create(**validated_data)
+        validated_data.pop('groups')
+        validated_data.pop('user_permissions')
+        validated_data['is_active'] = True
+        return CustomUser.objects.create_user(**validated_data)
     
     def validate(self, data):
         if CustomUser.objects.filter(email=data['email']).exists():
