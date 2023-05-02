@@ -20,7 +20,7 @@ phone_regex = RegexValidator(
         
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
-    image = CloudinaryField('images', allowed_formats = ['jpg'], validators=[validate_image_size, validate_image_extension])
+    image = CloudinaryField('images', validators=[validate_image_size, validate_image_extension])
     phone = models.CharField(max_length=13, validators=[phone_regex])
     confirm_password = models.CharField(max_length=255)
 
@@ -39,7 +39,6 @@ class Address(models.Model):
     street = models.CharField(max_length=100, validators=[MinLengthValidator(3)])
     building_number = models.CharField(max_length=10, validators=[MinLengthValidator(3)])
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='addresses')
-    # street2 = models.CharField(max_length=100, validators=[MinLengthValidator(3)])
 
     def __str__(self):
         return f"{self.street}, {self.district}, {self.city}, {self.country}"
