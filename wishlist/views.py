@@ -62,3 +62,9 @@ class UserWishlistList(generics.ListAPIView):
     def get_queryset(self):
         user_id = self.kwargs['user_id']
         return Wishlist.objects.filter(user_id=user_id)
+    
+
+class WishlistItemDelete(generics.DestroyAPIView):
+    queryset = Wishlist.objects.all()
+    serializer_class = WishlistSerializer
+    lookup_field = 'id'

@@ -3,7 +3,7 @@ from django.urls import path, include
 from rest_framework import routers
 from products.views  import CategoryViewSet, ProductViewSet ,ProductListByCategory ,ProductList
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from wishlist.views import WishlistList, WishlistDetail ,UserWishlistList
+from wishlist.views import WishlistList, WishlistDetail ,UserWishlistList ,WishlistItemDelete
 
 
 router = routers.DefaultRouter()
@@ -21,6 +21,7 @@ urlpatterns = [
     path('wishlist', WishlistList.as_view(), name='wishlist-list'),
     path('wishlist/<int:pk>/', WishlistDetail.as_view(), name='wishlist-detail'),
     path('user/wishlist/<int:user_id>/', UserWishlistList.as_view(), name='user-wishlist-list'),
+    path('wishlist/delete/<int:id>/', WishlistItemDelete.as_view(), name='remove-from-wishlist'),
 
     path('auth/', include('users.urls')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
