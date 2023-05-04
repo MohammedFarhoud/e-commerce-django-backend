@@ -20,7 +20,8 @@ urlpatterns = [
     path('productserach/', ProductList.as_view(), name='product_list'),
     path('wishlist', WishlistList.as_view(), name='wishlist-list'),
     path('wishlist/<int:pk>/', WishlistDetail.as_view(), name='wishlist-detail'),
-    path('user/wishlist/<int:user_id>/', UserWishlistList.as_view(), name='user-wishlist-list'),
+    # path('user/wishlist/<int:user_id>/', UserWishlistList.as_view(), name='user-wishlist-list'),
+    path('user/wishlist', UserWishlistList.as_view(), name='user-wishlist-list'),
     path('wishlist/delete/<int:id>/', WishlistItemDelete.as_view(), name='remove-from-wishlist'),
 
     path('auth/', include('users.urls')),
