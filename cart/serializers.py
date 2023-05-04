@@ -1,8 +1,10 @@
 from rest_framework import serializers
 from cart.models import Cart, CartProduct
-from django.shortcuts import get_object_or_404
+from products.serializers import ProductSerializer
+from django.core.validators import MinValueValidator
 
-class CartSerializer(serializers.ModelSerializer):
+class AddToCartSerializer(serializers.ModelSerializer):
+    quantity = serializers.IntegerField(validators=[MinValueValidator(1)])
 
     class Meta:
         model = CartProduct
@@ -25,6 +27,12 @@ class CartSerializer(serializers.ModelSerializer):
             
         return cart_product
     
+class UpdateCartSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CartProduct
+        fields = ['product', 'quantity']
+        
     def update(self, instance ,validated_data):
         action = self.context.get('action')
         if action not in ('INCREASE', 'DECREASE'):
@@ -40,3 +48,10 @@ class CartSerializer(serializers.ModelSerializer):
             instance.delete()
             
         return instance
+
+class CartSerializer(serializers.ModelSerializer):
+    products = ProductSerializer(many=True)
+    
+    class Meta:
+        model = Cart
+        fields = ['id', 'products']

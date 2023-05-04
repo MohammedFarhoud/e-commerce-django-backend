@@ -1,4 +1,4 @@
-from cart.serializers import CartSerializer
+from cart.serializers import CartSerializer, AddToCartSerializer, UpdateCartSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -13,10 +13,10 @@ class CartView(APIView):
     def post(self, request, *args, **kwargs):
         user = request.user
         
-        serializer = CartSerializer(data=request.data, context={'user': user})
+        serializer = AddToCartSerializer(data=request.data, context={'user': user})
         if serializer.is_valid():
             serializer.save()
-            return Response({'message': 'Product added successfully', 'cart': serializer.data}, status=status.HTTP_201_CREATED)
+            return Response({'message': 'Product added successfully', 'product': serializer.data}, status=status.HTTP_201_CREATED)
         else:
             return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -38,10 +38,10 @@ class CartView(APIView):
         except CartProduct.DoesNotExist:
             raise serializers.ValidationError({'message': 'Product not found'}, code=status.HTTP_404_NOT_FOUND)
         
-        serializer = CartSerializer(cart_product, data=request.data, context={'action': action})
+        serializer = UpdateCartSerializer(cart_product, data=request.data, context={'action': action})
         if serializer.is_valid():
             serializer.save()
-            return Response({'message': 'Product Updated successfully', 'cart': serializer.data}, status=status.HTTP_200_OK)
+            return Response({'message': 'Product Updated successfully', 'product': serializer.data}, status=status.HTTP_200_OK)
         else:
             return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
