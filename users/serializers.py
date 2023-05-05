@@ -119,16 +119,24 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         #         if address_serializer.is_valid():
         #             address_serializer.save()
         for address_data in addresses_data:
-            if 'id' in address_data:
-                address = Address.objects.get(pk=address_data['id'], user=instance)
-                address.street = address_data.get('street', address.street)
-                address.city = address_data.get('city', address.city)
-                address.state = address_data.get('state', address.state)
-                address.zip_code = address_data.get('zip_code', address.zip_code)
-                address.country = address_data.get('country', address.country)
-                address.save()
+            address_id = address_data.get('id', None)
+            if address_id:
+                try:
+                    address = Address.objects.get(id=address_id, user=instance)
+                    address_serializer = AddressSerializer(address, data=address_data)
+                    if address_serializer.is_valid():
+                        address_serializer.save()
+                    else:
+                        raise serializers.ValidationError(address_serializer.errors)
+                except Address.DoesNotExist:
+                    raise serializers.ValidationError(f"Address with id {address_id} does not exist.")
             else:
-                Address.objects.create(user=instance, **address_data)
+                address_serializer = AddressSerializer(data=address_data)
+                if address_serializer.is_valid():
+                    address_serializer.save(user=instance)
+                else:
+                    raise serializers.ValidationError(address_serializer.errors)
+
 
         return instance
         # return instance
