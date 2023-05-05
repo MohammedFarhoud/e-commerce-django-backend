@@ -3,6 +3,8 @@ from django.shortcuts import render
 from rest_framework import generics, permissions
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 from products.models import Product
 import users
@@ -10,7 +12,7 @@ from .models import Wishlist
 from .serializers import WishlistSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import AllowAny ,IsAuthenticated
-from rest_framework import serializers
+from rest_framework import serializers ,status
 
 
 class WishlistList(generics.ListCreateAPIView):
@@ -81,16 +83,16 @@ class UserWishlistList(generics.ListAPIView):
         return Wishlist.objects.filter(user_id=user_id)
     
 
-class WishlistItemDelete(generics.DestroyAPIView):
-    queryset = Wishlist.objects.all()
-    serializer_class = WishlistSerializer
-    lookup_field = 'id'
-    # permission_classes = [IsAuthenticated]
-# class WishlistItemDelete(generics.DestroyAPIView):
-#         product_id = kwargs['product']
-#         user = request.user
-#         cart = get_object_or_404(Cart, user=user)
-#         product = get_object_or_404(Product, id=product_id)
-#         cart_product = get_object_or_404(CartProduct, cart=cart, product=product)
-#         cart_product.delete()
-#         return Response({'message': 'Product deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+class WishlistItemDelete(APIView):
+    def delete(self, request, id):
+        try:
+            wishlist = Wishlist.objects.get(user=request.user)
+            product = Product.objects.get(id=id)
+            wishlist.product.remove(product)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Wishlist.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        except Product.DoesNotExist:
+            return Response(data={'error': 'Product not found in wishlist.'}, status=status.HTTP_400_BAD_REQUEST)
+
