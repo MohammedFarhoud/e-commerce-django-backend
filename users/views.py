@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from users.serializers import Address, CustomUser
+from users.serializers import Address, CustomUser, UserUpdateSerializer
 from rest_framework import generics, status
 from users.serializers import AddressSerializer, UserSerializer
 from rest_framework.permissions import IsAuthenticated
@@ -45,3 +45,28 @@ class Registeration(generics.CreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
         return  Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class UserDetail(generics.RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserSerializer
+
+    def get_object(self):
+        return self.request.user
+    def get_serializer_class(self):
+        if self.request.method == 'PATCH':
+            return UserUpdateSerializer
+        return self.serializer_class
+
+    def patch(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+
+
+    
+    
+
+    

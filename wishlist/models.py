@@ -4,7 +4,7 @@ from products.models import Product
 from users.models import CustomUser
 
 class Wishlist(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='wishlist',blank=True)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='wishlist',blank=True)
     product = models.ManyToManyField(Product, related_name='wishlists')
     
     def __str__(self):

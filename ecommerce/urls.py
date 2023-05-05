@@ -25,6 +25,5 @@ urlpatterns = [
     path('wishlist/delete/<int:id>/', WishlistItemDelete.as_view(), name='remove-from-wishlist'),
 
     path('auth/', include('users.urls')),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('cart/', include('cart.urls')),
 ]
