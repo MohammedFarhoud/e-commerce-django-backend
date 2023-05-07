@@ -5,15 +5,23 @@ from django.core.validators import MinValueValidator
 
 
 class Order(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='order')
-    product = models.ManyToManyField(Product, related_name='orders',through='OrderProduct')
     STATUS_CHOICES = (
         ('PENDING', 'Pending'),
         ('SHIPPED', 'Shipped'),
         ('DELIVERED', 'Delivered'),
     )
-    status = models.CharField(max_length=9, choices=STATUS_CHOICES)
+    PAYMENT_METHOD_CHOICES = (
+        ('cod', 'Cash on Delivery'),
+        ('visa', 'Pay by Visa'),
+    )
     
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='order')
+    products = models.ManyToManyField(Product, related_name='orders',through='OrderProduct')
+    status = models.CharField(max_length=9, choices=STATUS_CHOICES)
+    payment_method = models.CharField(max_length=16, choices=PAYMENT_METHOD_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
         return f"{self.user.username} - #{self.pk}"
     
