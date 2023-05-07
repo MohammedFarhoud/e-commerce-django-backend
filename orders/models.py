@@ -1,6 +1,5 @@
 from django.db import models
 from products.models import Product
-
 from users.models import CustomUser
 from django.core.validators import MinValueValidator
 

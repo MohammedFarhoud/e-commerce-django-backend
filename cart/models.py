@@ -9,6 +9,13 @@ class Cart(models.Model):
     
     def __str__(self):
         return f"{self.user.username} - #{self.pk}"
+    
+    def calculate_total_price(self):
+        total_price = 0
+        cart_products = self.cartproduct_set.all()
+        for cart_product in cart_products:
+            total_price += cart_product.product.price * cart_product.quantity
+        return total_price
 
 class CartProduct(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
