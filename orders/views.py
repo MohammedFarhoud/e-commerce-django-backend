@@ -3,8 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from cart.models import Cart
-from orders.models import Order
-from orders.serializers import OrderSerializer
+from orders.models import Order, OrderProduct
+from orders.serializers import GetOrderSerializer, PostOrderSerializer
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -16,14 +16,16 @@ class OrderView(APIView):
         cart = get_object_or_404(Cart, user=request.user)
         payment_method = request.data.get('payment_method')
         total_price = cart.calculate_total_price()
+        cart_products = cart.cartproduct_set.all()
         order_data = {
             'user': request.user.id,
-            'products': cart.products,
-            'payment_method': payment_method
+            'payment_method': payment_method,
         }
-        serializer = OrderSerializer(data=order_data)
+        serializer = PostOrderSerializer(data=order_data)
         if serializer.is_valid():
-            serializer.save()
+            order = serializer.save()
+            for cart_product in cart_products:
+                OrderProduct.objects.create(order=order, product=cart_product.product, quantity=cart_product.quantity)
             cart.delete()
             return Response({'message': 'Order added successfully', 'order': serializer.data}, status=status.HTTP_201_CREATED)
         return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
@@ -40,5 +42,5 @@ class OrderView(APIView):
         orders = Order.objects.filter(user=request.user)
         if not orders:
             return Response({'error': 'No orders found for the user'}, status=status.HTTP_404_NOT_FOUND)
-        serializer = OrderSerializer(orders)
+        serializer = GetOrderSerializer(orders, many=True)
         return Response({'message': 'Orders found', 'orders': serializer.data}, status=status.HTTP_200_OK)
