@@ -9,6 +9,7 @@ class Order(models.Model):
         ('PENDING', 'Pending'),
         ('SHIPPED', 'Shipped'),
         ('DELIVERED', 'Delivered'),
+        ('CANCELLED', 'Cancelled'),
     )
     PAYMENT_METHOD_CHOICES = (
         ('cod', 'Cash on Delivery'),
@@ -17,10 +18,10 @@ class Order(models.Model):
     
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='order')
     products = models.ManyToManyField(Product, related_name='orders',through='OrderProduct')
-    status = models.CharField(max_length=9, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=9, choices=STATUS_CHOICES, default='PENDING')
     payment_method = models.CharField(max_length=16, choices=PAYMENT_METHOD_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.user.username} - #{self.pk}"
