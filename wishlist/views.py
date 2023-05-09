@@ -8,6 +8,7 @@ from rest_framework.response import Response
 
 from products.models import Product
 import users
+from wishlist.pagination import WishlistPagination
 from .models import Wishlist
 from .serializers import WishlistSerializer
 from django.shortcuts import get_object_or_404
@@ -72,6 +73,8 @@ class WishlistDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class UserWishlistList(generics.ListAPIView):
     serializer_class = WishlistSerializer
+    # pagination_class = WishlistPagination
+
 
     def get_queryset(self):
         # user_id = self.kwargs['user_id']
