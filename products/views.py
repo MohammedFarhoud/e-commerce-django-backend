@@ -20,6 +20,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 
 class ProductListByCategory(ListAPIView):
     serializer_class = ProductSerializer
+    pagination_class = ProductPagination
 
     def get_queryset(self):
         category_id = self.kwargs['category_id']
