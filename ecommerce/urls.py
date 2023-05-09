@@ -4,7 +4,9 @@ from rest_framework import routers
 from products.views  import CategoryViewSet, ProductViewSet ,ProductListByCategory ,ProductList
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from wishlist.views import WishlistList, WishlistDetail ,UserWishlistList ,WishlistItemDelete
-
+# from orders.views import PaymentView 
+# from orders.views import CreateCheckOutSession ,stripe_webhook_view
+from orders.views import PaymentView ,create_payment_intent ,process_payment
 
 router = routers.DefaultRouter()
 router.register(r'category', CategoryViewSet)
@@ -23,7 +25,20 @@ urlpatterns = [
     # path('user/wishlist/<int:user_id>/', UserWishlistList.as_view(), name='user-wishlist-list'),
     path('user/wishlist', UserWishlistList.as_view(), name='user-wishlist-list'),
     path('wishlist/product/<int:id>/', WishlistItemDelete.as_view(), name='remove-from-wishlist'),
+    
+    # path('api/payments/create-payment-intent/',create_payment_intent),
+    path('payment/', PaymentView.as_view(), name='payment'),
+    
+    path('api/payments/create-payment-intent/', create_payment_intent, name='create_payment_intent'),
+    path('api/payments/', process_payment, name='process_payment'),
 
+
+    # path('create_checkout_session/', CreateCheckOutSession, name='create_checkout_session'),
+    # path('stripe_webhook/', stripe_webhook_view, name='stripe_webhook'),
+    # path('create-checkout-session/', views.CreateCheckOutSession, name='create_checkout_session'),
+
+    
+    
     path('auth/', include('users.urls')),
     path('cart/', include('cart.urls')),
 ]
