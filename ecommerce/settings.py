@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     'wishlist',
     'orders',
     'rest_framework',
-        'corsheaders',
+    'corsheaders',
 
 ]
 
@@ -117,7 +117,6 @@ CORS_ALLOW_METHODS = [
 ]
 
 
-# SITE_URL='http://localhost:3000/'
 SITE_URL = 'http://localhost:3000'
 ROOT_URLCONF = 'ecommerce.urls'
 

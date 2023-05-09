@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from django.shortcuts import redirect, render
 import stripe
 from rest_framework.views import APIView
@@ -138,7 +137,6 @@ def process_payment(request):
         return Response({'succeeded': True})
     except Exception as e:
         return Response({'error': str(e)})
-=======
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -184,4 +182,3 @@ class OrderView(APIView):
             return Response({'error': 'No orders found for the user'}, status=status.HTTP_404_NOT_FOUND)
         serializer = GetOrderSerializer(orders, many=True)
         return Response({'message': 'Orders found', 'orders': serializer.data}, status=status.HTTP_200_OK)
->>>>>>> orders
