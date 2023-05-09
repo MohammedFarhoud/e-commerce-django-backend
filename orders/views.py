@@ -15,7 +15,6 @@ class OrderView(APIView):
     def post(self, request):
         cart = get_object_or_404(Cart, user=request.user)
         payment_method = request.data.get('payment_method')
-        total_price = cart.calculate_total_price()
         cart_products = cart.cartproduct_set.all()
         order_data = {
             'user': request.user.id,
