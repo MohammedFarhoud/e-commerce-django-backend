@@ -4,7 +4,7 @@ from products.serializers import ProductSerializer
 from django.core.validators import MinValueValidator
 
 class AddToCartSerializer(serializers.ModelSerializer):
-    quantity = serializers.IntegerField(validators=[MinValueValidator(1)])
+    quantity = serializers.IntegerField(validators=[MinValueValidator(1)], default=1)
 
     class Meta:
         model = CartProduct
@@ -50,11 +50,27 @@ class UpdateCartSerializer(serializers.ModelSerializer):
         return instance
 
 class CartSerializer(serializers.ModelSerializer):
-    products = ProductSerializer(many=True)
+    products = serializers.SerializerMethodField()
     total_price = serializers.SerializerMethodField()
     
     def get_total_price(self, instance):
             return instance.calculate_total_price()
+        
+    def get_products(self, instance):
+        cart_products = instance.cartproduct_set.all()
+        
+        products = []
+        for cart_product in cart_products:
+            products.append({
+                'id': cart_product.product.id,
+                'name': cart_product.product.name,
+                'description': cart_product.product.description,
+                'image': cart_product.product.image.url,
+                'price': cart_product.product.price,
+                'category': cart_product.product.category.name,
+                'quantity': cart_product.quantity,
+            })
+        return products
     
     class Meta:
         model = Cart
