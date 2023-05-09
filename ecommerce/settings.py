@@ -14,11 +14,17 @@ import cloudinary.uploader
 import cloudinary.api
 from pathlib import Path
 from datetime import timedelta
+import os
+import stripe
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+
+STRIPE_API_KEY = os.environ.get('sk_test_51N4C2MCnAe4mWFw2TKo8V3gkpZAfU7YE7oJF0MAJUZakxSOjm6jXC01q2knSLXfNI0moAvwoSF9Vhm9setmKAqJ400kB90PKWO')
+STRIPE_API_SECRET = os.environ.get('pk_test_51N4C2MCnAe4mWFw2fLdkdIxaFOibNbuLjEBZRWOUmLEXyK68JmvmAr5aKhisWfsiaXaZTzz6z6uysSrNeAWwCsf1001cwsuWQq')
+stripe.api_key='sk_test_51N4C2MCnAe4mWFw2TKo8V3gkpZAfU7YE7oJF0MAJUZakxSOjm6jXC01q2knSLXfNI0moAvwoSF9Vhm9setmKAqJ400kB90PKWO'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -47,6 +53,8 @@ INSTALLED_APPS = [
     'wishlist',
     'orders',
     'rest_framework',
+        'corsheaders',
+
 ]
 
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -59,8 +67,58 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+    
+     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    
 ]
 
+
+
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000',
+    'http://localhost',
+    'https://localhost:3000',
+    'http://localservername',
+     'http://127.0.0.1:3000',
+    'http://localservername',
+        'https://checkout.stripe.com',
+    
+)
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_HEADERS=[
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'http://localhost:8000',
+    'https://checkout.stripe.com',
+    'https://checkout.stripe.com'
+]
+
+CORS_ALLOW_METHODS = [
+'DELETE',
+'GET',
+'OPTIONS',
+'PATCH',
+'POST',
+'PUT',
+]
+
+
+# SITE_URL='http://localhost:3000/'
+SITE_URL = 'http://localhost:3000'
 ROOT_URLCONF = 'ecommerce.urls'
 
 TEMPLATES = [
