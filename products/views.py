@@ -1,7 +1,7 @@
-from django.shortcuts import render
 from rest_framework import viewsets
 from .models import Category,Product, Image
 from .serializers import CategorySerializer, ImageSerializer,ProductSerializer
+from products.pagination import ProductPagination
 from rest_framework.generics import ListAPIView
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -15,10 +15,13 @@ class ImageViewSet(viewsets.ModelViewSet):
 class ProductViewSet(viewsets.ModelViewSet):
     queryset=Product.objects.all()
     serializer_class=ProductSerializer
+    pagination_class = ProductPagination
+    
 
 
 class ProductListByCategory(ListAPIView):
     serializer_class = ProductSerializer
+    pagination_class = ProductPagination
 
     def get_queryset(self):
         category_id = self.kwargs['category_id']

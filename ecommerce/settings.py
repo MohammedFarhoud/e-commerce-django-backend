@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     'wishlist',
     'orders',
     'rest_framework',
-        'corsheaders',
+    'corsheaders',
 
 ]
 
@@ -76,16 +76,16 @@ MIDDLEWARE = [
 
 
 
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000',
-    'http://localhost',
-    'https://localhost:3000',
-    'http://localservername',
-     'http://127.0.0.1:3000',
-    'http://localservername',
-        'https://checkout.stripe.com',
+# CORS_ORIGIN_WHITELIST = (
+#     'http://localhost:3000',
+#     'http://localhost',
+#     'https://localhost:3000',
+#     'http://localservername',
+#      'http://127.0.0.1:3000',
+#     'http://localservername',
+#     'https://checkout.stripe.com',
     
-)
+# )
 CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOW_HEADERS=[
@@ -99,6 +99,7 @@ CORS_ALLOW_HEADERS=[
     "x-csrftoken",
     "x-requested-with",
 ]
+CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
@@ -106,7 +107,9 @@ CORS_ALLOWED_ORIGINS = [
     'https://checkout.stripe.com',
     'https://checkout.stripe.com'
 ]
-
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    'http://localhost:3000',
+]
 CORS_ALLOW_METHODS = [
 'DELETE',
 'GET',
@@ -117,7 +120,6 @@ CORS_ALLOW_METHODS = [
 ]
 
 
-# SITE_URL='http://localhost:3000/'
 SITE_URL = 'http://localhost:3000'
 ROOT_URLCONF = 'ecommerce.urls'
 

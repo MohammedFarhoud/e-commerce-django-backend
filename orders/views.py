@@ -14,6 +14,7 @@ import json
 from rest_framework.decorators import api_view
 
 from users.models import CustomUser
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 
 class StripeCheckoutView(APIView):
@@ -75,7 +76,6 @@ class PaymentView(APIView):
             cancel_url=settings.SITE_URL + '?/canceled=true',
             metadata={'user_id': request.user.id}
         )
-
         for cart_product in cart.cartproduct_set.all():
             PaymentHistory.objects.create(
                 user=request.user, 
@@ -84,9 +84,10 @@ class PaymentView(APIView):
             )
 
         # return Response({'session_id': session.id}, status=status.HTTP_200_OK)
-        return redirect(session.url, code=303)
-
+        # return redirect(session.url, code=303)
+        print(session)
         # return JsonResponse({'sessionId': session['id']})
+        return JsonResponse({'sessionId': session.url})
 
     def put(self, request):
         intent_id = request.data.get('intent_id')
