@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from cart.models import Cart, CartProduct
+from cart.pagination import CartProductPagination
 from products.serializers import ProductSerializer
 from django.core.validators import MinValueValidator
 
@@ -58,9 +59,12 @@ class CartSerializer(serializers.ModelSerializer):
         
     def get_products(self, instance):
         cart_products = instance.cartproduct_set.all()
-        
+        request = self.context.get('request')
+        paginator = CartProductPagination()
+        paginated_products = paginator.paginate_queryset(cart_products, request)
+
         products = []
-        for cart_product in cart_products:
+        for cart_product in paginated_products:
             products.append({
                 'id': cart_product.product.id,
                 'name': cart_product.product.name,

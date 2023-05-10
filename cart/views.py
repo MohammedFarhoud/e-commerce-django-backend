@@ -1,3 +1,4 @@
+from cart.pagination import CartProductPagination
 from cart.serializers import CartSerializer, AddToCartSerializer, UpdateCartSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -21,9 +22,10 @@ class CartView(APIView):
             return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         
     def get(self, request, *args, **kwargs):
+        class_pagination = CartProductPagination
         user = request.user
         cart = get_object_or_404(Cart, user=user)
-        serializer = CartSerializer(cart)
+        serializer = CartSerializer(cart, context={'request': request})
         return Response({'message': 'Cart found', 'cart': serializer.data}, status=status.HTTP_200_OK)
     
     def put(self, request, *args, **kwargs):
