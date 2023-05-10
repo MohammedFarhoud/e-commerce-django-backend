@@ -22,12 +22,14 @@ class Category(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=100 ,validators=[MinLengthValidator(3)])
     description = models.CharField(max_length=100, validators=[MinLengthValidator(3)])
-    image = CloudinaryField('images', validators=[validate_image_size, validate_image_extension])
     price = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(0.01)])
     quantity = models.IntegerField(validators=[MinValueValidator(0)])
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='product')
     
     def __str__(self):
         return self.name
-    
+
+class Image(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
+    image = CloudinaryField('images', validators=[validate_image_size, validate_image_extension])
 
