@@ -19,7 +19,9 @@ urlpatterns = [
     
     
     path('category/<int:category_id>/products', ProductListByCategory.as_view(), name='product_list_by_category'),
-    path('productserach/', ProductList.as_view(), name='product_list'),
+    # path('productserach/', ProductList.as_view(), name='product_list'),
+    # path('productsearch/', ProductViewSet.as_view({'get': 'list'}), name='product_search'),
+
     path('wishlist', WishlistList.as_view(), name='wishlist-list'),
     path('wishlist/<int:pk>/', WishlistDetail.as_view(), name='wishlist-detail'),
     # path('user/wishlist/<int:user_id>/', UserWishlistList.as_view(), name='user-wishlist-list'),

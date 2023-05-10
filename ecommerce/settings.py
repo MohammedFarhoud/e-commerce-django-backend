@@ -54,6 +54,8 @@ INSTALLED_APPS = [
     'orders',
     'rest_framework',
     'corsheaders',
+    'django_filters',
+
 
 ]
 
@@ -75,6 +77,9 @@ MIDDLEWARE = [
 ]
 
 
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
 
 # CORS_ORIGIN_WHITELIST = (
 #     'http://localhost:3000',
@@ -98,6 +103,7 @@ CORS_ALLOW_HEADERS=[
     "user-agent",
     "x-csrftoken",
     "x-requested-with",
+    
 ]
 CORS_ALLOW_CREDENTIALS = True
 
