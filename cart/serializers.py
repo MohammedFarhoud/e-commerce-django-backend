@@ -76,11 +76,12 @@ class CartSerializer(serializers.ModelSerializer):
 
         products = []
         for cart_product in paginated_products:
+            images = [image.image.url for image in cart_product.product.images.all()]
             products.append({
                 'id': cart_product.product.id,
                 'name': cart_product.product.name,
                 'description': cart_product.product.description,
-                'image': cart_product.product.image.url,
+                'images': images,
                 'price': cart_product.product.price,
                 'category': cart_product.product.category.name,
                 'quantity': cart_product.quantity,
