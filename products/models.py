@@ -15,7 +15,8 @@ def validate_image_extension(image):
 
 class Category(models.Model):
     name = models.CharField(max_length=30, validators=[MinLengthValidator(3)])
-    # image = CloudinaryField('images',validators=[validate_image_size, validate_image_extension],default='default.jpg',blank=True,null=True)
+    image = CloudinaryField('images',validators=[validate_image_size, validate_image_extension],default='default.jpg',blank=True,null=True)
+    description = models.CharField(max_length=100, validators=[MinLengthValidator(3)],blank=True,null=True)
 
     def __str__(self):
         return self.name
