@@ -22,7 +22,6 @@ class CartView(APIView):
             return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         
     def get(self, request, *args, **kwargs):
-        class_pagination = CartProductPagination
         user = request.user
         cart = get_object_or_404(Cart, user=user)
         serializer = CartSerializer(cart, context={'request': request})
