@@ -10,8 +10,15 @@ class ProductDetailsPagination(PageNumberPagination):
     max_page_size = 100
     
 class WishlistSerializer(serializers.ModelSerializer):
-    product_details = serializers.SerializerMethodField()
+    product_details = ProductSerializer(source='product', many=True, read_only=True)
 
+
+    class Meta:
+        model = Wishlist
+        fields = ['id', 'user','product','product_details']
+
+class WishlistGetSerializer(serializers.ModelSerializer):
+    product_details = serializers.SerializerMethodField()
 
     def get_product_details(self, obj):
         queryset = obj.product.all()
@@ -20,7 +27,7 @@ class WishlistSerializer(serializers.ModelSerializer):
         serializer = ProductSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data).data
     
-
+    
     class Meta:
         model = Wishlist
         fields = ['id', 'user', 'product_details']

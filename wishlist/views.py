@@ -10,39 +10,66 @@ from products.models import Product
 import users
 from wishlist.pagination import WishlistPagination
 from .models import Wishlist
-from .serializers import WishlistSerializer
+from .serializers import WishlistGetSerializer, WishlistSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import AllowAny ,IsAuthenticated
 from rest_framework import serializers ,status
 
 
 class WishlistList(generics.ListCreateAPIView):
-    # permission_classes = [AllowAny]
     permission_classes = [IsAuthenticated]
     queryset = Wishlist.objects.all()
     serializer_class = WishlistSerializer
     print('test1')
 
+    # def perform_create(self, serializer):
+    #     # if self.request.user.is_authenticated:
+    #         # user = self.request.data.get('user')
+    #         user = self.request.user
+    #         # print(user)
+    #         # if not user.is_authenticated:
+    #             # raise PermissionDenied(detail="You must be logged in to add to your wishlist.")
+            
+            
+    #         product_id=self.request.data.get('product')
+    #         existing_wishlist = Wishlist.objects.filter(user=user).first()
+    #         # print(existing_wishlist)
+    #         # print(product_id)
+    #         # print(existing_wishlist.product)
+    #         # my_wishlist = Wishlist.objects.get(id=1)
+    #         # print(my_wishlist.product.all())
+    #         print(existing_wishlist)
+
+    #         if existing_wishlist:
+    #             # products = existing_wishlist.product.all()
+    #             is_in_wishlist = existing_wishlist.product.filter(id=product_id).exists()
+    #             print(is_in_wishlist)
+    #             if is_in_wishlist:
+    #                 raise serializers.ValidationError('product already exists in wishlist')
+    #             else:
+    #                 product = get_object_or_404(Product, id=product_id)
+    #                 existing_wishlist.product.add(product)
+    #                 # serializer.instance = existing_wishlist
+    #                 # valdata date 
+    #                 # serializer.save()
+    #                 existing_wishlist.save()
+    #                 print('product added to existing wishlist')
+    #         else:
+    #             product = get_object_or_404(Product, id=product_id)
+    #             new_wishlist = Wishlist.objects.create(user=user)
+    #             new_wishlist.product.add(product)
+    #             # serializer.instance = new_wishlist
+    #             # serializer.save()
+    #             new_wishlist.save()
+    #             print('product added to new wishlist')
+
     def perform_create(self, serializer):
-        # if self.request.user.is_authenticated:
-            # user = self.request.data.get('user')
             user = self.request.user
-            # print(user)
-            # if not user.is_authenticated:
-                # raise PermissionDenied(detail="You must be logged in to add to your wishlist.")
-            
-            
-            product_id=self.request.data.get('product')
+            product_id = self.request.data.get('product')
             existing_wishlist = Wishlist.objects.filter(user=user).first()
-            # print(existing_wishlist)
-            # print(product_id)
-            # print(existing_wishlist.product)
-            # my_wishlist = Wishlist.objects.get(id=1)
-            # print(my_wishlist.product.all())
             print(existing_wishlist)
 
             if existing_wishlist:
-                # products = existing_wishlist.product.all()
                 is_in_wishlist = existing_wishlist.product.filter(id=product_id).exists()
                 print(is_in_wishlist)
                 if is_in_wishlist:
@@ -50,20 +77,19 @@ class WishlistList(generics.ListCreateAPIView):
                 else:
                     product = get_object_or_404(Product, id=product_id)
                     existing_wishlist.product.add(product)
-                    # serializer.instance = existing_wishlist
-                    # valdata date 
-                    # serializer.save()
                     existing_wishlist.save()
                     print('product added to existing wishlist')
             else:
                 product = get_object_or_404(Product, id=product_id)
                 new_wishlist = Wishlist.objects.create(user=user)
                 new_wishlist.product.add(product)
-                # serializer.instance = new_wishlist
-                # serializer.save()
                 new_wishlist.save()
                 print('product added to new wishlist')
 
+    def post(self, request, *args, **kwargs):
+        self.perform_create(request.data)
+        return Response({'status': 'success'}, status=status.HTTP_201_CREATED)
+    
 
 
 class WishlistDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -72,7 +98,7 @@ class WishlistDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class UserWishlistList(generics.ListAPIView):
-    serializer_class = WishlistSerializer
+    serializer_class = WishlistGetSerializer
     # pagination_class = WishlistPagination
 
 
