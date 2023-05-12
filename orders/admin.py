@@ -9,11 +9,9 @@ class ProductInline(admin.TabularInline ,admin.StackedInline):
     verbose_name_plural = 'Products'
 class OrderAdmin(admin.ModelAdmin):
     inlines = [ProductInline]
-    list_display = ('get_order_number', 'user', 'status')
+    list_display = ('id','user', 'status','payment_method','created_at','updated_at',)
     
-    def get_order_number(self, obj):
-        return f"Order {obj.pk}"
-    get_order_number.short_description = 'Order Number'
+
 
 admin.site.register(Order, OrderAdmin)
 

@@ -9,11 +9,11 @@ class ProductInline(admin.TabularInline ,admin.StackedInline):
     
 class CartAdmin(admin.ModelAdmin):
     inlines = [ProductInline]
-    list_display = ('get_cart_number', 'user')
+    list_display = ('id','get_cart_number', 'user')
     
     def get_cart_number(self, obj):
         return f"Cart {obj.pk}"
-    get_cart_number.short_description = 'Cart Number'
+    get_cart_number.short_description = 'Cart Name'
 
 admin.site.register(Cart, CartAdmin)
 

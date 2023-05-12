@@ -40,6 +40,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+        'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -195,6 +196,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# STATICFILES_DIRS = [
+#     '../static',
+# ]
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
@@ -218,4 +222,42 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
     "SIGNING_KEY": 'somesecretsecretsomekeysecret',
+}
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
+
+JAZZMIN_SETTINGS = {
+    "site_title": "E-Commerce Dashboard",
+    
+    "site_header": "E-Commerce Dashboard",
+    
+        "site_brand": "E-Commerce Admin",
+
+    "login_logo": 'images.png',
+    "site_logo": "images.png",
+    
+    "welcome_sign": "Welcome to the e-commerce Dashboard ITI",
+
+    "copyright": "e-commerce Dashboard ITI",
+    
+        "search_model": ["auth.User", "auth.Group"],
+        
+        
+      "topmenu_links": [
+
+        {"name": "Home",  "url": "admin:index", "permissions": ["auth.view_user"]},
+
+        {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
+
+        {"model": "auth.User"},
+
+        {"app": "books"},
+    ],
+
+
+
+
+    
 }

@@ -5,6 +5,7 @@ from django.core.validators import MinValueValidator
 from users.models import CustomUser
 
 
+
 class Order(models.Model):
     STATUS_CHOICES = (
         ('PENDING', 'Pending'),
