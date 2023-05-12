@@ -6,6 +6,7 @@ cloudinary==1.32.0
 Django==4.2
 django-cors-headers==3.14.0
 django-filter==23.2
+django-jazzmin==2.6.0
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
 idna==3.4
