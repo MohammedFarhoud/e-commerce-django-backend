@@ -224,10 +224,13 @@ SIMPLE_JWT = {
     "SIGNING_KEY": 'somesecretsecretsomekeysecret',
 }
 
+
+
+STRIPE_SECRET_WEBHOOK='whsec_03ce6b586620eec93594579b709130478dcfcaad93cfd2cf2f75f64f10d6c397'
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
-
 JAZZMIN_SETTINGS = {
     "site_title": "E-Commerce Dashboard",
     

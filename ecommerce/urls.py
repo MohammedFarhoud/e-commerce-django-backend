@@ -6,7 +6,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from wishlist.views import WishlistList, WishlistDetail ,UserWishlistList ,WishlistItemDelete
 # from orders.views import PaymentView 
 # from orders.views import CreateCheckOutSession ,stripe_webhook_view
-from orders.views import PaymentView ,create_payment_intent ,process_payment
+from orders.views import PaymentView ,create_payment_intent ,process_payment ,my_webhook_view
 
 router = routers.DefaultRouter()
 router.register(r'category', CategoryViewSet)
@@ -30,7 +30,8 @@ urlpatterns = [
     
     # path('api/payments/create-payment-intent/',create_payment_intent),
     path('payment/', PaymentView.as_view(), name='payment'),
-    
+    path('api/webhook/', my_webhook_view, name='stripe_webhook'),
+
     path('api/payments/create-payment-intent/', create_payment_intent, name='create_payment_intent'),
     path('api/payments/', process_payment, name='process_payment'),
 
