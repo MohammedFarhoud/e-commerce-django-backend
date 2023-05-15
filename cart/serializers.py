@@ -1,8 +1,9 @@
 from rest_framework import serializers
-from cart.models import Cart, CartProduct
+from cart.models import Cart, CartProduct, Product
 from cart.pagination import CartProductPagination
 from products.serializers import ProductSerializer
 from django.core.validators import MinValueValidator
+from django.shortcuts import get_object_or_404
 
 class AddToCartSerializer(serializers.ModelSerializer):
     quantity = serializers.IntegerField(validators=[MinValueValidator(1)], default=1)
@@ -29,9 +30,11 @@ class AddToCartSerializer(serializers.ModelSerializer):
             cart_product.quantity += quantity
         else:
             cart_product.quantity = quantity
+        if (cart_product.quantity <= product.quantity):
+            cart_product.save()
+        else:
+            raise serializers.ValidationError({'error': "You exceeded product quantity in our store."})
 
-        cart_product.save()
-            
         return cart_product
     
 class UpdateCartSerializer(serializers.ModelSerializer):
@@ -47,6 +50,8 @@ class UpdateCartSerializer(serializers.ModelSerializer):
         
     def update(self, instance ,validated_data):
         action = self.context.get('action')
+        product_id = self.context.get('product')
+        prodcut = get_object_or_404(Product, id=product_id)
         if action not in ('INCREASE', 'DECREASE'):
             raise serializers.ValidationError({'error': "Action can only be 'INCREASE' or 'DECREASE'"})
         
@@ -54,6 +59,11 @@ class UpdateCartSerializer(serializers.ModelSerializer):
             instance.quantity += 1
         elif action == 'DECREASE' and instance.quantity > 0:
             instance.quantity -= 1
+        
+        if (instance.quantity <= prodcut.quantity):
+            instance.save()
+        else:
+            raise serializers.ValidationError({'error': "You exceeded product quantity in our store."})
         instance.save()
         
         if instance.quantity == 0:

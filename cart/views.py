@@ -39,7 +39,7 @@ class CartView(APIView):
         except CartProduct.DoesNotExist:
             raise serializers.ValidationError({'message': 'Product not found'}, code=status.HTTP_404_NOT_FOUND)
         
-        serializer = UpdateCartSerializer(cart_product, data=request.data, context={'action': action})
+        serializer = UpdateCartSerializer(cart_product, data=request.data, context={'action': action, 'product': product})
         if serializer.is_valid():
             serializer.save()
             return Response({'message': 'Product Updated successfully', 'product': serializer.data}, status=status.HTTP_200_OK)
