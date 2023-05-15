@@ -68,48 +68,48 @@ class OrderView(APIView):
         serializer = GetOrderSerializer(orders, many=True)
         return Response({'message': 'Orders found', 'orders': serializer.data}, status=status.HTTP_200_OK)
 
-@api_view(['POST'])
-@csrf_exempt
-def stripe_webhook_view(request):
-    # Retrieve the event from Stripe
-    payload = request.body
-    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
-    event = None
+# @api_view(['POST'])
+# @csrf_exempt
+# def stripe_webhook_view(request):
+#     # Retrieve the event from Stripe
+#     payload = request.body
+#     sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+#     event = None
 
-    try:
-        event = stripe.Webhook.construct_event(
-            payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
-        )
-    except ValueError as e:
-        # Invalid payload
-        return HttpResponse(status=400)
-    except stripe.error.SignatureVerificationError as e:
-        # Invalid signature
-        return HttpResponse(status=400)
+#     try:
+#         event = stripe.Webhook.construct_event(
+#             payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
+#         )
+#     except ValueError as e:
+#         # Invalid payload
+#         return HttpResponse(status=400)
+#     except stripe.error.SignatureVerificationError as e:
+#         # Invalid signature
+#         return HttpResponse(status=400)
 
-    # Handle the event
-    if event['type'] == 'payment_intent.succeeded':
-        intent = event['data']['object']
-        user_id = intent['metadata']['user_id']
-        user = CustomUser.objects.get(id=user_id)
-        cart = user.cart
-        cart_products = cart.cartproduct_set.all()
-        order_data = {
-            'user': user_id,
-            'payment_method': intent['payment_method'],
-        }
-        serializer = PostOrderSerializer(data=order_data)
-        if serializer.is_valid():
-            order = serializer.save()
-            for cart_product in cart_products:
-                OrderProduct.objects.create(order=order, product=cart_product.product, quantity=cart_product.quantity)
-                PaymentHistory.objects.create(user=user, product=cart_product.product, payment_status=True)
-            cart.delete()
-            return HttpResponse({'message': 'Order added successfully', 'order': serializer.data}, status=status.HTTP_201_CREATED)
-        return HttpResponse({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+#     # Handle the event
+#     if event['type'] == 'payment_intent.succeeded':
+#         intent = event['data']['object']
+#         user_id = intent['metadata']['user_id']
+#         user = CustomUser.objects.get(id=user_id)
+#         cart = user.cart
+#         cart_products = cart.cartproduct_set.all()
+#         order_data = {
+#             'user': user_id,
+#             'payment_method': intent['payment_method'],
+#         }
+#         serializer = PostOrderSerializer(data=order_data)
+#         if serializer.is_valid():
+#             order = serializer.save()
+#             for cart_product in cart_products:
+#                 OrderProduct.objects.create(order=order, product=cart_product.product, quantity=cart_product.quantity)
+#                 PaymentHistory.objects.create(user=user, product=cart_product.product, payment_status=True)
+#             cart.delete()
+#             return HttpResponse({'message': 'Order added successfully', 'order': serializer.data}, status=status.HTTP_201_CREATED)
+#         return HttpResponse({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Default response for unhandled events
-    return HttpResponse(status=200)
+#     # Default response for unhandled events
+#     return HttpResponse(status=200)
 
 class StripeCheckoutView(APIView):
     def post(self, request):
