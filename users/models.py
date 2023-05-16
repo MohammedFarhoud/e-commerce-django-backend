@@ -7,10 +7,14 @@ from django.core.validators import MinLengthValidator, RegexValidator
 import os
 
 def validate_image_size(image):
+    if image != 'ljpmwdkm1wz1sagqsk5f':
+        return
     if image.size > 2 * 1024 * 1024:
         raise ValidationError('Image size should be less than 2MB.')
 
 def validate_image_extension(image):
+    if image != 'ljpmwdkm1wz1sagqsk5f':
+        return
     ext = os.path.splitext(image.name)[1]
     if not ext.lower() in ['.jpg', '.jpeg', '.png', '.webp']:
         raise ValidationError('Image must be in JPG, JPEG, or PNG format.')
@@ -22,7 +26,7 @@ phone_regex = RegexValidator(
         
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
-    image = CloudinaryField('images', validators=[validate_image_size, validate_image_extension])
+    image = CloudinaryField('images', validators=[validate_image_size, validate_image_extension], default='ljpmwdkm1wz1sagqsk5f')
     phone = models.CharField(max_length=13, validators=[phone_regex], unique=True)
     confirm_password = models.CharField(max_length=255)
 
