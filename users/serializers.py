@@ -20,8 +20,6 @@ class AddressSerializer(serializers.ModelSerializer):
     
 class UserSerializer(serializers.ModelSerializer):
     addresses = AddressSerializer(many=True, required=False)
-    # email = serializers.EmailField(required=False)
-
 
     class Meta:
         model = CustomUser
