@@ -41,7 +41,7 @@ urlpatterns = [
     # path('create-checkout-session/', views.CreateCheckOutSession, name='create_checkout_session'),
 
     
-    
+    path('orders/', include('orders.urls')),
     path('auth/', include('users.urls')),
     path('cart/', include('cart.urls')),
  ]
