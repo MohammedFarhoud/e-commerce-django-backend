@@ -9,7 +9,6 @@ from django.views.decorators.csrf import csrf_exempt
 from cart.models import Cart
 from orders.models import PaymentHistory
 from products.models import Product
-from django.http import HttpResponse
 import json
 from rest_framework.decorators import api_view
 from django.core.mail import send_mail
@@ -26,7 +25,6 @@ from orders.models import Order, OrderProduct
 from orders.serializers import GetOrderSerializer, PostOrderSerializer
 from rest_framework import status
 from rest_framework.response import Response
-from django.http import HttpResponse
 from django.http import HttpResponse
 from rest_framework.renderers import JSONRenderer
 
@@ -61,13 +59,18 @@ class OrderView(APIView):
             return Response({'message': 'Order cancelled successfully'}, status=status.HTTP_200_OK)
         return Response({'error': 'Order status should be pending to cancel'}, status=status.HTTP_400_BAD_REQUEST)
     
+    # def get(self, request):
+    #     orders = Order.objects.filter(user=request.user)
+    #     if not orders:
+    #         return Response({'error': 'No orders found for the user'}, status=status.HTTP_404_NOT_FOUND)
+    #     serializer = GetOrderSerializer(orders, many=True)
+    #     return Response({'message': 'Orders found', 'orders': serializer.data}, status=status.HTTP_200_OK)
     def get(self, request):
         orders = Order.objects.filter(user=request.user)
         if not orders:
             return Response({'error': 'No orders found for the user'}, status=status.HTTP_404_NOT_FOUND)
-        serializer = GetOrderSerializer(orders, many=True)
+        serializer = GetOrderSerializer(orders, many=True, context={'request': request})
         return Response({'message': 'Orders found', 'orders': serializer.data}, status=status.HTTP_200_OK)
-
 # @api_view(['POST'])
 # @csrf_exempt
 # def stripe_webhook_view(request):
@@ -253,6 +256,7 @@ def my_webhook_view(request):
                 OrderProduct.objects.create(order=order, product=cart_product.product, quantity=cart_product.quantity)
                 PaymentHistory.objects.create(user=user, product=cart_product.product, payment_status=True)
             cart.delete()
+            print("Cart deleted succesc" )
             return HttpResponse({'message': 'Order added successfully', 'order': serializer.data}, status=status.HTTP_201_CREATED)
         return HttpResponse({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
     return HttpResponse(status=200)

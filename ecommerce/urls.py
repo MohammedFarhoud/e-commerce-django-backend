@@ -30,7 +30,7 @@ urlpatterns = [
     
     # path('api/payments/create-payment-intent/',create_payment_intent),
     path('payment/', PaymentView.as_view(), name='payment'),
-    path('api/webhook/', my_webhook_view, name='stripe_webhook'),
+    path('api/webhook', my_webhook_view, name='stripe_webhook'),
 
     path('api/payments/create-payment-intent/', create_payment_intent, name='create_payment_intent'),
     path('api/payments/', process_payment, name='process_payment'),

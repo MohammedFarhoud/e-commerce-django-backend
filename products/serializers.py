@@ -1,4 +1,8 @@
 from rest_framework import serializers
+
+from users.models import CustomUser
+
+
 from .models import Category,Product, Image
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -24,8 +28,15 @@ class ProductSerializer(serializers.ModelSerializer):
         
     def get_is_in_cart(self, obj):
         user = self.context['request'].user
-        return user.cart.products.filter(id=obj.id).exists()
+        try:
+            return user.cart.products.filter(id=obj.id).exists()
+        except CustomUser.cart.RelatedObjectDoesNotExist:
+            return False
+
 
     def get_is_in_wishlist(self, obj):
         user = self.context['request'].user
-        return user.wishlist.product.filter(id=obj.id).exists()
+        try:
+            return user.wishlist.product.filter(id=obj.id).exists()
+        except CustomUser.cart.RelatedObjectDoesNotExist:
+            return False
