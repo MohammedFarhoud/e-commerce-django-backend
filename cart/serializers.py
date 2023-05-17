@@ -95,7 +95,7 @@ class CartSerializer(serializers.ModelSerializer):
                 'price': cart_product.product.price,
                 'category': cart_product.product.category.name,
                 'total_quantity': cart_product.product.quantity,
-                'cart_quantity': cart_product.quantity,
+                'quantity': cart_product.quantity,
             })
         return products
     
