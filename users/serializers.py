@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
-from users.models import CustomUser, Address
+from users.models import CustomUser, Address, ContactUs
 from cloudinary.models import CloudinaryField
 from django.contrib.auth.hashers import make_password
 
@@ -138,3 +138,9 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
         return instance
         # return instance
+
+class ContactUsSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = ContactUs
+        fields = '__all__'
