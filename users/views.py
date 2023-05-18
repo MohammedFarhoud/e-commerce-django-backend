@@ -54,9 +54,10 @@ class UserDetail(generics.RetrieveUpdateAPIView):
         return self.request.user
     def get_serializer_class(self):
         if self.request.method == 'PATCH':
+            print('adsdsad')
             return UserUpdateSerializer
         return self.serializer_class
-
+        
     def patch(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=True)

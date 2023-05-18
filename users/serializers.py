@@ -52,21 +52,23 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     image=CloudinaryField()
     password = serializers.CharField(required=False, write_only=True)
     confirm_password = serializers.CharField(required=False, write_only=True)
-    addresses = AddressSerializer(many=True)
+    # addresses = AddressSerializer(many=True)
 
 
     class Meta:
         model = CustomUser
         fields = ['username', 'email', 'first_name', 'last_name','phone','image','password','confirm_password' , 'addresses']
-
+        
     def validate(self, attrs):
         if not any(attrs.values()):
+            print('upadta users')
             raise serializers.ValidationError("At least one field must be updated")
-        
+
         password = attrs.get('password')
         confirm_password = attrs.get('confirm_password')
         if not password or not confirm_password or password != confirm_password:
-            raise serializers.ValidationError
+            print('upadta sssss')
+            # raise serializers.ValidationError
         return attrs
     
     def update(self, instance, validated_data):
@@ -77,7 +79,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             validated_data['password'] = make_password(password)
             validated_data['confirm_password'] = make_password(confirm_password)
         instance = super().update(instance, validated_data)
-
+        print('44444444444444')
         for address_data in addresses_data:
             address_id = address_data.get('id', None)
             if address_id:

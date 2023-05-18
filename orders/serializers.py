@@ -20,6 +20,8 @@ class PostOrderSerializer(serializers.ModelSerializer):
 
 class GetOrderSerializer(serializers.ModelSerializer):
     products = ProductSerializer(many=True, context={'request': None})
+    
+    
 
     class Meta:
         model = Order
