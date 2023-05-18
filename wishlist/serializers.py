@@ -24,7 +24,7 @@ class WishlistGetSerializer(serializers.ModelSerializer):
         queryset = obj.product.all()
         paginator = ProductDetailsPagination()
         result_page = paginator.paginate_queryset(queryset, self.context['request'])
-        serializer = ProductSerializer(result_page, many=True)
+        serializer = ProductSerializer(result_page, many=True,context={'request': self.context['request']})
         return paginator.get_paginated_response(serializer.data).data
     
     
