@@ -52,17 +52,12 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     image=CloudinaryField()
     password = serializers.CharField(required=False, write_only=True)
     confirm_password = serializers.CharField(required=False, write_only=True)
-    # addresses=serializers.SerializerMethodField()
     addresses = AddressSerializer(many=True)
 
 
     class Meta:
         model = CustomUser
         fields = ['username', 'email', 'first_name', 'last_name','phone','image','password','confirm_password' , 'addresses']
-
-    # def get_addresses(self, obj):
-    #     addresses = obj.addresses.all()
-    #     return AddressSerializer(addresses, many=True).data
 
     def validate(self, attrs):
         if not any(attrs.values()):
@@ -81,41 +76,8 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         if password and confirm_password:
             validated_data['password'] = make_password(password)
             validated_data['confirm_password'] = make_password(confirm_password)
-        # return super().update(instance, validated_data)
         instance = super().update(instance, validated_data)
 
-        # if addresses_data is not None:
-        #     for address_data in addresses_data:
-        #         address_id = address_data.get('id', None)
-        #         if address_id is not None:
-        #             # If the address has an ID, we need to update an existing address
-        #             address = instance.addresses.get(id=address_id)
-        #             address_serializer = AddressSerializer(address, data=address_data)
-        #             if address_serializer.is_valid():
-        #                 address_serializer.save()
-        #             else:
-        #                 raise serializers.ValidationError(address_serializer.errors)
-        #         else:
-        #             # If the address has no ID, we need to create a new address
-        #             address_serializer = AddressSerializer(data=address_data)
-        #             if address_serializer.is_valid():
-        #                 address_serializer.save(user=instance)
-        #             else:
-        #                 raise serializers.ValidationError(address_serializer.errors)
-        
-        # if addresses_data is not None:
-        #     instance.addresses.all().delete() # delete existing addresses
-        #     for address_data in addresses_data:
-        #         Address.objects.create(user=instance, **address_data)
-        
-           # update addresses
-        # for address_data in addresses_data:
-        #     address_id = address_data.get('id', None)
-        #     if address_id:
-        #         address = Address.objects.get(pk=address_id, user=instance)
-        #         address_serializer = AddressSerializer(address, data=address_data)
-        #         if address_serializer.is_valid():
-        #             address_serializer.save()
         for address_data in addresses_data:
             address_id = address_data.get('id', None)
             if address_id:
@@ -137,7 +99,6 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
 
         return instance
-        # return instance
 
 class ContactUsSerializer(serializers.ModelSerializer):
     

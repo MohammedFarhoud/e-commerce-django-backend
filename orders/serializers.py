@@ -1,6 +1,6 @@
 from rest_framework import serializers
 import orders
-from orders.models import Order
+from orders.models import Order, OrderProduct
 from products.serializers import ProductSerializer
 from rest_framework.request import Request
 
@@ -26,4 +26,4 @@ class GetOrderSerializer(serializers.ModelSerializer):
         fields = ['id', 'status', 'payment_method', 'products']
 
 # serializer = GetOrderSerializer(orders, many=True, context={'request': request})
-serializer = GetOrderSerializer(orders, many=True, context={'request': Request})
+serializer = GetOrderSerializer(orders ,many=True, context={'request': Request})
