@@ -135,6 +135,8 @@ def my_webhook_view(request):
             order = serializer.save()
             for cart_product in cart_products:
                 OrderProduct.objects.create(order=order, product=cart_product.product, quantity=cart_product.quantity)
+                cart_product.product.quantity -= cart_product.quantity
+                cart_product.product.save()
                 PaymentHistory.objects.create(user=user, product=cart_product.product, payment_status=True)
             cart.delete()
             print("Cart deleted succesc" )
