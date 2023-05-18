@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from users.models import ContactUs
+from users.serializers import ContactUsSerializer
 from users.serializers import Address, CustomUser, UserUpdateSerializer
 from rest_framework import generics, status
 from users.serializers import AddressSerializer, UserSerializer
@@ -39,7 +40,6 @@ class Registeration(generics.CreateAPIView):
     
     def post(self, request):
         serializer = self.serializer_class(data = request.data)
-        
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -64,9 +64,7 @@ class UserDetail(generics.RetrieveUpdateAPIView):
         serializer.save()
         return Response(serializer.data)
 
-
-
-    
-    
-
+class ContactUsView(generics.CreateAPIView):
+    queryset = ContactUs.objects.all()
+    serializer_class = ContactUsSerializer
     
