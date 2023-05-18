@@ -60,7 +60,7 @@ class OrderView(APIView):
         return Response({'error': 'Order status should be pending to cancel'}, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request):
-        orders = Order.objects.filter(user=request.user)
+        orders = Order.objects.filter(user=request.user).order_by('-id')
         if not orders:
             return Response({'error': 'No orders found for the user'}, status=status.HTTP_404_NOT_FOUND)
         serializer = GetOrderSerializer(orders, many=True, context={'request': request})

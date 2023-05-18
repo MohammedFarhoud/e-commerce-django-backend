@@ -139,7 +139,7 @@ def my_webhook_view(request):
                 cart_product.product.save()
                 PaymentHistory.objects.create(user=user, product=cart_product.product, payment_status=True)
             cart.delete()
-            print("Cart deleted succesc" )
+            print("Cart deleted succesc")
             return HttpResponse({'message': 'Order added successfully', 'order': serializer.data}, status=status.HTTP_201_CREATED)
         return HttpResponse({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
     return HttpResponse(status=200) 
