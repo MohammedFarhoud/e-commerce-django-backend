@@ -69,14 +69,30 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['username', 'email', 'first_name', 'last_name','phone','image','password','confirm_password' , 'addresses']
+    def validate(self, data):
+        password = data.get('password')
+        confirm_password = data.get('confirm_password')
+        email = data.get('email')
+        phone = data.get('phone')
+        username = data.get('username')
+
+        if CustomUser.objects.filter(email=email).exists() and email != self.instance.email:
+            raise ValidationError('This email is already registered.')
         
-    def validate(self, attrs):
-        password = attrs.get('password')
-        confirm_password = attrs.get('confirm_password')
-        if not password or not confirm_password or password != confirm_password:
-            print('update')
-            # raise serializers.ValidationError
-        return attrs
+        if CustomUser.objects.filter(phone=phone).exists() and phone != self.instance.phone:
+            raise ValidationError('This phone number is already registered.')
+        
+        if CustomUser.objects.filter(username=username).exists() and username != self.instance.username:
+            raise ValidationError('This username is already registered.')
+        
+        if password:
+            if not confirm_password:
+                raise ValidationError('Please enter the confirm password.')
+            elif password != confirm_password:
+                raise ValidationError('Passwords do not match.')
+        
+        return data
+    
     
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
