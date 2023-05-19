@@ -39,11 +39,11 @@ class CustomUser(AbstractUser):
         return self.username
     
 class Address(models.Model):
-    country = models.CharField(max_length=50, validators=[MinLengthValidator(3)])
-    city = models.CharField(max_length=50, validators=[MinLengthValidator(3)])
-    district = models.CharField(max_length=50, validators=[MinLengthValidator(3)])
-    street = models.CharField(max_length=100, validators=[MinLengthValidator(3)])
-    building_number = models.CharField(max_length=10, validators=[MinLengthValidator(3)])
+    country = models.CharField(max_length=50, validators=[MinLengthValidator(3)], blank=True)
+    city = models.CharField(max_length=50, validators=[MinLengthValidator(3)], blank=True)
+    district = models.CharField(max_length=50, validators=[MinLengthValidator(3)], blank=True)
+    street = models.CharField(max_length=100, validators=[MinLengthValidator(3)], blank=True)
+    building_number = models.CharField(max_length=10, validators=[MinLengthValidator(1)], blank=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='addresses', blank=True, null=True)
 
     def __str__(self):
