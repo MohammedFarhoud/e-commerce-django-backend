@@ -39,7 +39,23 @@ class Registeration(generics.CreateAPIView):
     serializer_class = UserSerializer
     
     def post(self, request):
-        serializer = self.serializer_class(data = request.data)
+        country = request.data.get('country')
+        city = request.data.get('city')
+        district = request.data.get('district')
+        street = request.data.get('street')
+        building_number = request.data.get('building_number')
+        
+        addresses = [
+            {
+                'country': country,
+                'city': city,
+                'district': district,
+                'street': street,
+                'building_number': building_number
+            }
+        ]
+        
+        serializer = self.serializer_class(data = request.data, context={'addresses': addresses})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -76,7 +92,6 @@ class UserDetail(generics.RetrieveUpdateAPIView):
         ]
         
         serializer = self.get_serializer(instance, data=request.data, partial=True, context={'addresses': addresses})
-        print(request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)

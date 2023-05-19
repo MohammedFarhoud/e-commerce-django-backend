@@ -31,10 +31,19 @@ class UserSerializer(serializers.ModelSerializer):
         }
     
     def create(self, validated_data):
+        addresses_data = self.context.get('addresses')
         validated_data.pop('groups')
         validated_data.pop('user_permissions')
         validated_data['is_active'] = True
-        return CustomUser.objects.create_user(**validated_data)
+        user = CustomUser.objects.create_user(**validated_data)
+        address_data = addresses_data[0]
+        address, _ = Address.objects.get_or_create(user=user)
+        address_serializer = AddressSerializer(address, data=address_data)
+        if address_serializer.is_valid():
+            address_serializer.save()
+        else:
+            raise serializers.ValidationError(address_serializer.errors)
+        return user
     
     def validate(self, data):
         if CustomUser.objects.filter(email=data['email']).exists():
@@ -62,13 +71,10 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         fields = ['username', 'email', 'first_name', 'last_name','phone','image','password','confirm_password' , 'addresses']
         
     def validate(self, attrs):
-        if not any(attrs.values()):
-            raise serializers.ValidationError("At least one field must be updated")
-
         password = attrs.get('password')
         confirm_password = attrs.get('confirm_password')
         if not password or not confirm_password or password != confirm_password:
-            print('upadta sssss')
+            print('update')
             # raise serializers.ValidationError
         return attrs
     
@@ -82,14 +88,11 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         instance = super().update(instance, validated_data)
         address_data = addresses_data[0]
         address, _ = Address.objects.get_or_create(user=instance)
-        print('address')
-        print(address)
         address_serializer = AddressSerializer(address, data=address_data)
         if address_serializer.is_valid():
             address_serializer.save()
         else:
             raise serializers.ValidationError(address_serializer.errors)
-
         return instance
         
 class ContactUsSerializer(serializers.ModelSerializer):
