@@ -45,6 +45,6 @@ class ProductSerializer(serializers.ModelSerializer):
         if isinstance(user, AnonymousUser):
             return False
         try:
-            return user.wishlist.product.filter(id=obj.id).exists()
-        except CustomUser.cart.RelatedObjectDoesNotExist:
+            return user.wishlist.filter(id=obj.id).exists()
+        except CustomUser.wishlist.RelatedObjectDoesNotExist:
             return False
