@@ -48,19 +48,35 @@ class Registeration(generics.CreateAPIView):
     
 class UserDetail(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = UserSerializer
 
     def get_object(self):
         return self.request.user
+    
     def get_serializer_class(self):
         if self.request.method == 'PATCH':
-            print('adsdsad')
             return UserUpdateSerializer
-        return self.serializer_class
+        return UserSerializer
         
     def patch(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        country = request.data.get('country')
+        city = request.data.get('city')
+        district = request.data.get('district')
+        street = request.data.get('street')
+        building_number = request.data.get('building_number')
+        
+        addresses = [
+            {
+                'country': country,
+                'city': city,
+                'district': district,
+                'street': street,
+                'building_number': building_number
+            }
+        ]
+        
+        serializer = self.get_serializer(instance, data=request.data, partial=True, context={'addresses': addresses})
+        print(request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
