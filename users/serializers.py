@@ -13,7 +13,7 @@ class AddressSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.street = validated_data.get('street', instance.street)
         instance.city = validated_data.get('city', instance.city)
-        instance.district = validated_data.get('state', instance.district)
+        instance.district = validated_data.get('district', instance.district)
         instance.country = validated_data.get('country', instance.country)
         instance.building_number = validated_data.get('country', instance.building_number)
         instance.save()
