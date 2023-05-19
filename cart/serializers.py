@@ -97,7 +97,7 @@ class CartSerializer(serializers.ModelSerializer):
                 'total_quantity': cart_product.product.quantity,
                 'quantity': cart_product.quantity,
             })
-        return paginator.get_paginated_response(products).data
+        return products
     
     class Meta:
         model = Cart

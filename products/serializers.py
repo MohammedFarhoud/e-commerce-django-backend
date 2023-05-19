@@ -30,7 +30,6 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def get_is_in_cart(self, obj):
         print('sdfsfsdfd')
-        # print(self.context['request'])
         user = self.context['request'].user
         if isinstance(user, AnonymousUser):
             return False
