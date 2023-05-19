@@ -112,7 +112,6 @@ class UserWishlistList(generics.ListAPIView):
         return Wishlist.objects.filter(user_id=user_id)
     
 
-
 class WishlistItemDelete(APIView):
     def delete(self, request, id):
         try:

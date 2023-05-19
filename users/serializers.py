@@ -13,8 +13,9 @@ class AddressSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.street = validated_data.get('street', instance.street)
         instance.city = validated_data.get('city', instance.city)
-        instance.state = validated_data.get('state', instance.state)
+        instance.district = validated_data.get('state', instance.district)
         instance.country = validated_data.get('country', instance.country)
+        instance.building_number = validated_data.get('country', instance.building_number)
         instance.save()
         return instance
     
@@ -46,14 +47,15 @@ class UserSerializer(serializers.ModelSerializer):
             raise ValidationError('Passwords do not match.')
         
         return data
+    
 class UserUpdateSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=False)
+    username = serializers.CharField(required=False)
     phone=serializers.CharField(required=False)
     image=CloudinaryField()
     password = serializers.CharField(required=False, write_only=True)
     confirm_password = serializers.CharField(required=False, write_only=True)
-    # addresses = AddressSerializer(many=True)
-
+    addresses = AddressSerializer(many=True)
 
     class Meta:
         model = CustomUser
@@ -61,7 +63,6 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         
     def validate(self, attrs):
         if not any(attrs.values()):
-            print('upadta users')
             raise serializers.ValidationError("At least one field must be updated")
 
         password = attrs.get('password')
@@ -74,34 +75,23 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
         confirm_password = validated_data.pop('confirm_password', None)
-        addresses_data = validated_data.pop('addresses',[])
+        addresses_data = self.context.get('addresses')
         if password and confirm_password:
             validated_data['password'] = make_password(password)
             validated_data['confirm_password'] = make_password(confirm_password)
         instance = super().update(instance, validated_data)
-        print('44444444444444')
-        for address_data in addresses_data:
-            address_id = address_data.get('id', None)
-            if address_id:
-                try:
-                    address = Address.objects.get(id=address_id, user=instance)
-                    address_serializer = AddressSerializer(address, data=address_data)
-                    if address_serializer.is_valid():
-                        address_serializer.save()
-                    else:
-                        raise serializers.ValidationError(address_serializer.errors)
-                except Address.DoesNotExist:
-                    raise serializers.ValidationError(f"Address with id {address_id} does not exist.")
-            else:
-                address_serializer = AddressSerializer(data=address_data)
-                if address_serializer.is_valid():
-                    address_serializer.save(user=instance)
-                else:
-                    raise serializers.ValidationError(address_serializer.errors)
-
+        address_data = addresses_data[0]
+        address, _ = Address.objects.get_or_create(user=instance)
+        print('address')
+        print(address)
+        address_serializer = AddressSerializer(address, data=address_data)
+        if address_serializer.is_valid():
+            address_serializer.save()
+        else:
+            raise serializers.ValidationError(address_serializer.errors)
 
         return instance
-
+        
 class ContactUsSerializer(serializers.ModelSerializer):
     
     class Meta:
