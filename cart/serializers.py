@@ -82,10 +82,10 @@ class CartSerializer(serializers.ModelSerializer):
         cart_products = instance.cartproduct_set.all()
         request = self.context.get('request')
         paginator = CartProductPagination()
-        paginated_products = paginator.paginate_queryset(cart_products, request)
+        # paginated_products = paginator.paginate_queryset(cart_products, request)
 
         products = []
-        for cart_product in paginated_products:
+        for cart_product in cart_products:
             images = [image.image.url for image in cart_product.product.images.all()]
             products.append({
                 'id': cart_product.product.id,
